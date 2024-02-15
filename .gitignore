@@ -5,7 +5,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 project-outline.md
-.gitattributes
 
 # STS
 .apt_generated
