@@ -1,13 +1,17 @@
 import './App.css'
-import CourseList from './CourseList'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import CourseList from './pages/CourseList'
 
 function App() {
 
   return (
-    <div>
-      <h1>WatSchedule</h1>
-      <CourseList />
-    </div>
+    <Router>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/course-list' element={<CourseList />} />
+      </Routes>
+    </Router>
   )
 }
 
