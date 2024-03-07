@@ -1,7 +1,8 @@
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import { createFilterOptions } from '@mui/material/Autocomplete';
 import Fab from '@mui/material/Fab';
-import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
 import { useQuery, gql } from "@apollo/client";
 import { useState, useMemo } from "react";
 
@@ -13,6 +14,10 @@ type CourseCode = {
 
 type CourseCodesData = {
     course: CourseCode[];
+}
+
+type CourseSearchBarProps = {
+    onAdd: (courseName: string, courseNumber: string) => void;
 }
 
 const COURSE_CODE_QUERY = gql`
@@ -34,7 +39,11 @@ const getCourseParts = (code: string): string[] => {
     return [code.slice(0, numIndex).toUpperCase(), code.slice(numIndex).toUpperCase()];
 }
 
-export default function CourseSearchBar() {
+const filterOptions = createFilterOptions({
+    matchFrom: 'start',
+});
+
+export default function CourseSearchBar({ onAdd }: CourseSearchBarProps) {
 
     const { data, loading, error } = useQuery<CourseCodesData>(COURSE_CODE_QUERY);
     const [courseNameValue, setCourseNameValue] = useState('');
@@ -68,12 +77,13 @@ export default function CourseSearchBar() {
                     setCourseNameValue(newInputValue.toUpperCase());
                     setCourseNumberValue('');
                 }}
+                filterOptions={filterOptions}
                 disablePortal
                 id="course-code-field"
                 size="small"
                 freeSolo
                 options={courseNames}
-                sx={{ width: 300 }}
+                sx={{ width: 300, mr: 1 }}
                 renderInput={(params) => (
                     <TextField {...params} label="Course Code" placeholder="e.g. ECON" />
                 )}
@@ -88,13 +98,17 @@ export default function CourseSearchBar() {
                 size="small"
                 freeSolo
                 options={courseNumbers}
-                sx={{ width: 300 }}
+                sx={{ width: 300, mr: 1 }}
                 renderInput={(params) => (
                     <TextField {...params} label="Course Number" placeholder="e.g. 101" />
                 )}
             />
-            <Fab size="small">
-                <SearchIcon />
+            <Fab size="small" onClick={() => {
+                setCourseNameValue('');
+                setCourseNumberValue('')
+                return onAdd(courseNameValue, courseNumberValue)
+            }}>
+                <AddIcon />
             </Fab>
         </div>
     )
