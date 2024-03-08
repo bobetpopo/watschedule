@@ -22,7 +22,7 @@ type CourseSearchBarProps = {
 
 const COURSE_CODE_QUERY = gql`
     query Search_courses {
-        course(distinct_on: code) {
+        course(distinct_on: code, where: { sections: { term_id: { _eq: 1241 } } }) {
             code
         }
     }

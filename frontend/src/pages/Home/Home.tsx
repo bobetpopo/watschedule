@@ -1,7 +1,8 @@
-import CourseSearchBar from "../components/CourseSearchBar/CourseSearchBar"
-import CourseList from "../components/CourseList/CourseList";
+import CourseSearchBar from "../../components/CourseSearchBar/CourseSearchBar"
+import CourseList from "../../components/CourseList/CourseList";
 import { useState } from "react"
 import axios from "axios";
+import './Home.css'
 
 
 const getQuery = (code: string, term: number = 1241) => {
@@ -44,7 +45,7 @@ export default function Home() {
     const onAdd = async (courseName: string, courseNumber: string) => {
         if (!courseName || !courseNumber) return;
 
-        const code = courseName.toLowerCase() + courseNumber
+        const code = (courseName + courseNumber).toLowerCase();
         const query = getQuery(code);
         console.log(query)
         try {
@@ -57,10 +58,18 @@ export default function Home() {
         }
     };
 
+    const onDelete = (code: string) => {
+        setSectionDict(prev => {
+            const newData = { ...prev };
+            delete newData[code];
+            return newData;
+        })
+    };
+
     return (
         <div className="container">
             <CourseSearchBar onAdd={onAdd} />
-            <CourseList sectionDict={sectionDict} />
+            <CourseList sectionDict={sectionDict} onDelete={onDelete} />
         </div>
     )
 }
